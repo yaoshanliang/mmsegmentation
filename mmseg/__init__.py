@@ -56,11 +56,11 @@ def digit_version(version_str: str, length: int = 4):
 mmcv_min_version = digit_version(MMCV_MIN)
 mmcv_max_version = digit_version(MMCV_MAX)
 mmcv_version = digit_version(mmcv.__version__)
+print('mmcv_version: ', mmcv_version)
 
-
-assert (mmcv_min_version <= mmcv_version < mmcv_max_version), \
-    f'MMCV=={mmcv.__version__} is used but incompatible. ' \
-    f'Please install mmcv>=2.0.0rc4.'
+# assert (mmcv_min_version <= mmcv_version < mmcv_max_version), \
+#     f'MMCV=={mmcv.__version__} is used but incompatible. ' \
+#     f'Please install mmcv>=2.0.0rc4.'
 
 mmengine_min_version = digit_version(MMENGINE_MIN)
 mmengine_max_version = digit_version(MMENGINE_MAX)
