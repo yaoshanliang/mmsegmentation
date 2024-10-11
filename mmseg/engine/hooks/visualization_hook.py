@@ -114,7 +114,8 @@ class SegVisualizationHook(Hook):
             self._test_index += 1
 
             img_path = data_sample.img_path
-            window_name = f'test_{osp.basename(img_path)}'
+            # window_name = f'test_{osp.basename(img_path)}'
+            window_name = f'{osp.basename(img_path)}'
 
             img_path = data_sample.img_path
             img_bytes = get(img_path, backend_args=self.backend_args)

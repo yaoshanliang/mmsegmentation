@@ -23,6 +23,6 @@ class LaRSDataset(BaseSegDataset):
             img_suffix='.jpg',
             seg_map_suffix='.png',
             ignore_index=255,
-            reduce_zero_label=True,
+            reduce_zero_label=False,
             **kwargs)
 
