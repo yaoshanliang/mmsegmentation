@@ -72,7 +72,7 @@ class SegLocalVisualizer(Visualizer):
                  classes: Optional[List] = None,
                  palette: Optional[List] = None,
                  dataset_name: Optional[str] = None,
-                 alpha: float = 0.8,
+                 alpha: float = 1, # mask透明度，1代表全mask
                  **kwargs):
         super().__init__(name, image, vis_backends, save_dir, **kwargs)
         self.alpha: float = alpha
@@ -103,7 +103,7 @@ class SegLocalVisualizer(Visualizer):
                       sem_seg: PixelData,
                       classes: Optional[List],
                       palette: Optional[List],
-                      with_labels: Optional[bool] = True) -> np.ndarray:
+                      with_labels: Optional[bool] = False) -> np.ndarray:
         """Draw semantic seg of GT or prediction.
 
         Args:
@@ -258,14 +258,14 @@ class SegLocalVisualizer(Visualizer):
             name: str,
             image: np.ndarray,
             data_sample: Optional[SegDataSample] = None,
-            draw_gt: bool = True,
+            draw_gt: bool = False,
             draw_pred: bool = True,
             show: bool = False,
             wait_time: float = 0,
             # TODO: Supported in mmengine's Viusalizer.
             out_file: Optional[str] = None,
             step: int = 0,
-            with_labels: Optional[bool] = True) -> None:
+            with_labels: Optional[bool] = False) -> None:
         """Draw datasample and save to all backends.
 
         - If GT and prediction are plotted at the same time, they are
@@ -342,7 +342,6 @@ class SegLocalVisualizer(Visualizer):
 
         if show:
             self.show(drawn_img, win_name=name, wait_time=wait_time)
-
         if out_file is not None:
             mmcv.imwrite(mmcv.rgb2bgr(drawn_img), out_file)
         else:
