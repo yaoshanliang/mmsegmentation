@@ -1,6 +1,5 @@
-_base_ = ['./mask2former_swin-t_8xb2-90k_lars-512x1024.py']
-# pretrained = 'https://download.openmmlab.com/mmsegmentation/v0.5/pretrain/swin/swin_large_patch4_window12_384_22k_20220412-6580f57d.pth'  # noqa
-pretrained = '/home/shanliang/workspace/code/mmsegmentation/work_dirs/mask2former_swin-l-in22k-384x384-pre_8xb2-90k_waterscenes-512x1024/best.pth'  # noqa
+_base_ = ['./mask2former_swin-t_8xb2-90k_waterscenes-512x1024.py']
+pretrained = 'https://download.openmmlab.com/mmsegmentation/v0.5/pretrain/swin/swin_large_patch4_window12_384_22k_20220412-6580f57d.pth'  # noqa
 
 depths = [2, 2, 18, 2]
 model = dict(
@@ -11,9 +10,7 @@ model = dict(
         num_heads=[6, 12, 24, 48],
         window_size=12,
         init_cfg=dict(type='Pretrained', checkpoint=pretrained)),
-    decode_head=dict(in_channels=[192, 384, 768, 1536],
-                     sampler=dict(type='OHEMPixelSampler', thresh=0.7, min_kept=100000)
-    ))
+    decode_head=dict(in_channels=[192, 384, 768, 1536]))
 
 # set all layers in backbone to lr_mult=0.1
 # set all norm layers, position_embeding,

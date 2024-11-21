@@ -1,4 +1,4 @@
-_base_ = ['../_base_/default_runtime.py', '../_base_/datasets/lars.py']
+_base_ = ['../_base_/default_runtime.py', '../_base_/datasets/waterscenes.py']
 
 crop_size = (512, 1024)
 data_preprocessor = dict(
@@ -10,7 +10,7 @@ data_preprocessor = dict(
     seg_pad_val=255,
     size=crop_size,
     test_cfg=dict(size_divisor=32))
-num_classes = 3
+num_classes = 2
 model = dict(
     type='EncoderDecoder',
     data_preprocessor=data_preprocessor,
@@ -142,7 +142,7 @@ train_pipeline = [
         scales=[int(1024 * x * 0.1) for x in range(5, 21)],
         resize_type='ResizeShortestEdge',
         max_size=4096),
-    dict(type='RandomCrop', crop_size=crop_size, cat_max_ratio=0.5),
+    dict(type='RandomCrop', crop_size=crop_size, cat_max_ratio=0.9),
     dict(type='RandomFlip', prob=0.5),
     dict(type='PhotoMetricDistortion'),
     dict(type='PackSegInputs')
@@ -172,12 +172,12 @@ param_scheduler = [
         eta_min=0,
         power=0.9,
         begin=0,
-        end=160000,
+        end=90000,
         by_epoch=False)
 ]
 
 # training schedule for 90k
-train_cfg = dict(type='IterBasedTrainLoop', max_iters=160000, val_interval=10000)
+train_cfg = dict(type='IterBasedTrainLoop', max_iters=90000, val_interval=1000)
 val_cfg = dict(type='ValLoop')
 test_cfg = dict(type='TestLoop')
 default_hooks = dict(
@@ -185,7 +185,7 @@ default_hooks = dict(
     logger=dict(type='LoggerHook', interval=1000, log_metric_by_epoch=False),
     param_scheduler=dict(type='ParamSchedulerHook'),
     checkpoint=dict(
-        type='CheckpointHook', max_keep_ckpts=2, by_epoch=False, interval=10000,
+        type='CheckpointHook', by_epoch=False, interval=10000,
         save_best='mIoU'),
     sampler_seed=dict(type='DistSamplerSeedHook'),
     visualization=dict(type='SegVisualizationHook'))
@@ -194,4 +194,4 @@ default_hooks = dict(
 #   - `enable` means enable scaling LR automatically
 #       or not by default.
 #   - `base_batch_size` = (8 GPUs) x (2 samples per GPU).
-auto_scale_lr = dict(enable=False, base_batch_size=2)
+auto_scale_lr = dict(enable=False, base_batch_size=16)

@@ -1,6 +1,6 @@
 # dataset settings
-dataset_type = 'LaRSDataset' # 数据集类型，这将被用来定义数据集
-data_root = '/data/data1/shanliang/MaCVi/LaRs/MMSegmentation/' # 数据的根路径
+dataset_type = 'WaterScenesDataset' # 数据集类型，这将被用来定义数据集
+data_root = '/data/data1/shanliang/MaCVi/LaRs/WaterScenes/' # 数据的根路径
 ignore_idx=255
 img_norm_cfg = dict(
     mean=[123.675, 116.28, 103.53], std=[58.395, 57.12, 57.375], to_rgb=True)
@@ -31,13 +31,14 @@ train_dataloader = dict(
         type=dataset_type,
         data_root=data_root,
         data_prefix=dict(
-            img_path='img_dir/train', seg_map_path='ann_dir/train'), # 训练数据的前缀
+            img_path='images', seg_map_path='coco/SegmentationClass'), # 训练数据的前缀
+        # ann_file='all.txt',
         pipeline=[
             dict(type='LoadImageFromFile'), # 第1个流程，从文件路径里加载图像
             dict(type='LoadAnnotations'), # 第2个流程，对于当前图像，加载它的标注图像
             dict(type='RandomResize', scale=(2048, 1024), ratio_range=(0.5, 2.0), keep_ratio=True), # 调整输入图像大小(resize)和其标注图像的数据增广流程
-            dict(type='RandomCrop', crop_size=crop_size, cat_max_ratio=0.9), # 随机裁剪当前图像和其标注图像的数据增广流程
-            dict(type='RandomFlip', prob=0.9), # 翻转图像和其标注图像的数据增广流程
+            dict(type='RandomCrop', crop_size=crop_size, cat_max_ratio=0.75), # 随机裁剪当前图像和其标注图像的数据增广流程
+            dict(type='RandomFlip', prob=0.5), # 翻转图像和其标注图像的数据增广流程
             dict(type='PhotoMetricDistortion'), # 光学上使用一些方法扭曲当前图像和其标注图像的数据增广流程
             dict(type='PackSegInputs')  # 打包用于语义分割的输入数据
             # dict(type='Normalize', **img_norm_cfg)
@@ -53,7 +54,8 @@ val_dataloader = dict(
         type=dataset_type,
         data_root=data_root,
         data_prefix=dict(
-            img_path='img_dir/val', seg_map_path='ann_dir/val'),
+            img_path='images', seg_map_path='coco/SegmentationClass'),
+        ann_file='val.txt',
         pipeline=[
             dict(type='LoadImageFromFile'), # 第1个流程，从文件路径里加载图像
             dict(type='Resize', scale=(2048, 1024), keep_ratio=True), # 使用调整图像大小(resize)增强
@@ -81,7 +83,8 @@ test_dataloader = dict(
         type=dataset_type,
         data_root=data_root,
         data_prefix=dict(
-            img_path='img_dir/test', seg_map_path='ann_dir/test'),
+            img_path='images'),
+        ann_file='test.txt',
         # 测试数据变换中没有加载标注
         pipeline=[
             dict(type='LoadImageFromFile'), # 第1个流程，从文件路径里加载图像
